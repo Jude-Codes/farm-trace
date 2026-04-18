@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="theme-color" content="#2c5e2c">
     <title>Farm Product Traceability</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,7 +53,8 @@
         .info-row:last-child { border-bottom: none; }
         .info-label {
             font-weight: 600;
-            width: 130px;
+            width: 150px;
+            flex-shrink: 0;
             color: #3a5e3a;
         }
         .info-value { flex: 1; color: #1a2a1a; word-break: break-word; }
@@ -61,7 +63,7 @@
             padding: 60px 24px;
             color: #6b6b6b;
         }
-        .error { color: #d32f2f; background: #ffebee; }
+        .error { color: #d32f2f; background: #ffebee; border-radius: 12px; }
         .footer {
             text-align: center;
             padding: 16px;
@@ -78,28 +80,167 @@
         <div class="badge">Fresh from Ghana</div>
     </div>
     <div class="content" id="content">
-        <div class="loading">Loading product information...</div>
+        <div class="loading">Loading product information…</div>
     </div>
     <div class="footer">Scan QR code on package to verify authenticity</div>
 </div>
 
 <script>
-    
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6edexjwhvGTjhyfgZ5RR13-qsWar6JZ0L3_2zf6WmnUnOKWd7BYeFIlVaxI33hcHPDHdQaoU6SPbR/pub?output=csv';
-   
+
+    /* ── Sanitize a string for safe innerHTML injection ─────────────── */
+    function escapeHTML(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    /* ── Extract batch ID from URL path or query string ─────────────── */
+    function getBatchIdFromURL() {
+        /* Support ?id=BATCH123 or ?batchId=BATCH123 query params */
+        const params = new URLSearchParams(window.location.search);
+        const qp = params.get('id') || params.get('batchId');
+        if (qp && qp.trim()) return qp.trim();
+
+        /* Fall back to last path segment */
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        const lastPart = pathParts[pathParts.length - 1];
+        if (!lastPart) return null;
+
+        const cleaned = lastPart.replace(/\.html$/i, '');
+        /* Reject bare page names that aren't batch IDs */
+        if (['index', 'farm-trace', 'trace'].includes(cleaned.toLowerCase())) return null;
+
+        return decodeURIComponent(cleaned);
+    }
+
+    /* ── Robust CSV parser: handles quoted fields with embedded commas/newlines ── */
+    function parseCSV(csvText) {
+        const rows = [];
+        let field = '';
+        let inQuotes = false;
+        let currentRow = [];
+
+        for (let i = 0; i < csvText.length; i++) {
+            const ch = csvText[i];
+            const next = csvText[i + 1];
+
+            if (inQuotes) {
+                if (ch === '"' && next === '"') {
+                    /* Escaped double-quote inside a quoted field */
+                    field += '"';
+                    i++;
+                } else if (ch === '"') {
+                    inQuotes = false;
+                } else {
+                    field += ch;
+                }
+            } else {
+                if (ch === '"') {
+                    inQuotes = true;
+                } else if (ch === ',') {
+                    currentRow.push(field.trim());
+                    field = '';
+                } else if (ch === '\n' || (ch === '\r' && next === '\n')) {
+                    if (ch === '\r') i++; /* skip \n of \r\n */
+                    currentRow.push(field.trim());
+                    rows.push(currentRow);
+                    currentRow = [];
+                    field = '';
+                } else {
+                    field += ch;
+                }
+            }
+        }
+        /* Flush last field / row */
+        if (field || currentRow.length) {
+            currentRow.push(field.trim());
+            rows.push(currentRow);
+        }
+
+        if (rows.length < 2) return [];
+
+        const headers = rows[0];
+        return rows.slice(1).map(values => {
+            const row = {};
+            headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+            return row;
+        });
+    }
+
+    function findProductByBatchId(data, batchId) {
+        return data.find(
+            row => row.BatchID && row.BatchID.trim().toUpperCase() === batchId.toUpperCase()
+        );
+    }
+
+    /* ── Fix: parse date parts directly to avoid UTC off-by-one ─────── */
+    function formatDate(dateStr) {
+        if (!dateStr || !dateStr.trim()) return 'Not specified';
+        /* ISO yyyy-mm-dd — parse as local date to avoid UTC shift */
+        const isoMatch = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (isoMatch) {
+            const [, y, m, d] = isoMatch;
+            return new Date(+y, +m - 1, +d).toLocaleDateString('en-GB');
+        }
+        /* Other formats: let the browser try */
+        const date = new Date(dateStr);
+        return isNaN(date.getTime()) ? dateStr : date.toLocaleDateString('en-GB');
+    }
+
+    function displayProductInfo(product) {
+        const val = (key) => (product[key] || '').trim();
+        const display = (key, fallback = 'Not specified') => escapeHTML(val(key) || fallback);
+
+        const productType = val('ProductType');
+        let typeIcon = '🌾';
+        if (/chicken/i.test(productType)) typeIcon = '🐔';
+        else if (/egg/i.test(productType)) typeIcon = '🥚';
+        else if (/pepper/i.test(productType)) typeIcon = '🌶️';
+
+        const isAnimal = /chicken|egg|meat|fish/i.test(productType);
+        const plantedLabel = isAnimal ? '🐣 Hatched / Born' : '🌱 Planted';
+        const harvestLabel = isAnimal ? '✂️ Slaughter Date' : '✂️ Harvest Date';
+
+        const rows = [
+            { label: `${typeIcon} Batch ID`,  value: `<strong>${display('BatchID')}</strong>` },
+            { label: '📦 Product',            value: display('ProductType') },
+            { label: plantedLabel,             value: formatDate(val('ProductionDate')) },
+            { label: harvestLabel,             value: formatDate(val('HarvestDate')) },
+            { label: '⏳ Expiry Date',         value: formatDate(val('ExpiryDate')) },
+        ];
+
+        /* Only show Feed Used for animal products */
+        if (isAnimal) {
+            rows.splice(4, 0, { label: '🍽️ Feed Used', value: display('FeedUsed') });
+        }
+
+        const rowsHTML = rows.map(r => `
+            <div class="info-row">
+                <div class="info-label">${escapeHTML(r.label)}</div>
+                <div class="info-value">${r.value}</div>
+            </div>`).join('');
+
+        document.getElementById('content').innerHTML = `<div class="info-card">${rowsHTML}</div>`;
+    }
 
     async function loadData() {
         const contentDiv = document.getElementById('content');
         const batchId = getBatchIdFromURL();
 
         if (!batchId) {
-            contentDiv.innerHTML = '<div class="error">Invalid QR code. Please check the package.</div>';
+            contentDiv.innerHTML = '<div class="error">No Batch ID found. Please scan the QR code on the product package.</div>';
             return;
         }
 
         try {
             const response = await fetch(GOOGLE_SHEETS_CSV_URL);
-            if (!response.ok) throw new Error('Network response was not ok');
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status} – ${response.statusText}`);
+            }
             const csvText = await response.text();
             const data = parseCSV(csvText);
             const product = findProductByBatchId(data, batchId);
@@ -107,114 +248,16 @@
             if (product) {
                 displayProductInfo(product);
             } else {
-                contentDiv.innerHTML = '<div class="error">Product not found. Please verify the Batch ID or contact support.</div>';
+                contentDiv.innerHTML = `<div class="error">No product found for Batch ID <strong>${escapeHTML(batchId)}</strong>. Please verify the QR code or contact support.</div>`;
             }
         } catch (error) {
             console.error('Error loading data:', error);
-            contentDiv.innerHTML = '<div class="error">Unable to load product information. Please check your internet connection.</div>';
+            const isCORS = error instanceof TypeError && /fetch/i.test(error.message);
+            contentDiv.innerHTML = `<div class="error">${isCORS
+                ? 'Unable to load product data (network or permissions error). Please check your connection and try again.'
+                : `Error: ${escapeHTML(error.message)}`
+            }</div>`;
         }
-    }
-
-    function getBatchIdFromURL() {
-        const pathParts = window.location.pathname.split('/');
-        let lastPart = pathParts[pathParts.length - 1];
-        if (lastPart === '' || lastPart === 'farm-trace') {
-            return null;
-        }
-        if (lastPart.endsWith('.html')) {
-            lastPart = lastPart.replace('.html', '');
-        }
-        return decodeURIComponent(lastPart);
-    }
-
-    function parseCSV(csvText) {
-        const lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 2) return [];
-
-        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-        const data = [];
-
-        for (let i = 1; i < lines.length; i++) {
-            const values = [];
-            let insideQuotes = false;
-            let currentValue = '';
-            const line = lines[i];
-
-            for (let j = 0; j < line.length; j++) {
-                const char = line[j];
-                if (char === '"') {
-                    insideQuotes = !insideQuotes;
-                } else if (char === ',' && !insideQuotes) {
-                    values.push(currentValue.trim().replace(/^"|"$/g, ''));
-                    currentValue = '';
-                } else {
-                    currentValue += char;
-                }
-            }
-            values.push(currentValue.trim().replace(/^"|"$/g, ''));
-
-            const row = {};
-            headers.forEach((header, idx) => {
-                row[header] = values[idx] || '';
-            });
-            data.push(row);
-        }
-        return data;
-    }
-
-    function findProductByBatchId(data, batchId) {
-        return data.find(row => row.BatchID && row.BatchID.trim().toUpperCase() === batchId.trim().toUpperCase());
-    }
-
-    function formatDate(dateStr) {
-        if (!dateStr) return 'Not specified';
-        try {
-            const date = new Date(dateStr);
-            if (isNaN(date.getTime())) return dateStr;
-            return date.toLocaleDateString('en-GB');
-        } catch(e) {
-            return dateStr;
-        }
-    }
-
-    function displayProductInfo(product) {
-        const getValue = (key, defaultValue = 'Not specified') => product[key] && product[key].trim() ? product[key] : defaultValue;
-
-        const productType = getValue('ProductType');
-        let typeIcon = '🌾';
-        if (productType.toLowerCase().includes('chicken')) typeIcon = '🐔';
-        else if (productType.toLowerCase().includes('egg')) typeIcon = '🥚';
-        else if (productType.toLowerCase().includes('pepper')) typeIcon = '🌶️';
-
-        const html = `
-            <div class="info-card">
-                <div class="info-row">
-                    <div class="info-label">${typeIcon} Batch ID</div>
-                    <div class="info-value"><strong>${getValue('BatchID')}</strong></div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">📦 Product</div>
-                    <div class="info-value">${productType}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">🌱 Planted / Hatched</div>
-                    <div class="info-value">${formatDate(getValue('ProductionDate'))}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">✂️ Harvest / Slaughter</div>
-                    <div class="info-value">${formatDate(getValue('HarvestDate'))}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">🍽️ Feed Used</div>
-                    <div class="info-value">${getValue('FeedUsed')}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">⏳ Expiry Date</div>
-                    <div class="info-value">${formatDate(getValue('ExpiryDate'))}</div>
-                </div>
-            </div>
-        `;
-        document.getElementById('content').innerHTML = html;
     }
 
     loadData();
