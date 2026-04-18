@@ -1,239 +1,223 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.3">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Farm Product Traceability</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f4f0;
+            padding: 20px;
+            color: #1a2a1a;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #2c5e2c;
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+        .header h1 { font-size: 1.6rem; margin-bottom: 8px; }
+        .badge {
+            background: #ffd966;
+            color: #1a2a1a;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .content { padding: 24px; }
+        .info-card {
+            background: #f9fbf9;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e8e0;
+        }
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e8e0;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label {
+            font-weight: 600;
+            width: 130px;
+            color: #3a5e3a;
+        }
+        .info-value { flex: 1; color: #1a2a1a; word-break: break-word; }
+        .loading, .error {
+            text-align: center;
+            padding: 60px 24px;
+            color: #6b6b6b;
+        }
+        .error { color: #d32f2f; background: #ffebee; }
+        .footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 0.75rem;
+            color: #6b8c6b;
+            background: #f0f4f0;
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Farm Product Traceability&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>* { box-sizing: border-box; margin: 0; padding: 0; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #f0f4f0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #1a2a1a;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 24px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 12px rgba(0,0,0,0.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.header {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #2c5e2c;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 24px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.header h1 { font-size: 1.6rem; margin-bottom: 8px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.badge {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #ffd966;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #1a2a1a;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 8px 16px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.9rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.content { padding: 24px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-card {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #f9fbf9;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #e0e8e0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-row {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 12px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid #e0e8e0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-row:last-child { border-bottom: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-label {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 130px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #3a5e3a;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-value { flex: 1; color: #1a2a1a; word-break: break-word; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.loading, .error {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 60px 24px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #6b6b6b;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.error { color: #d32f2f; background: #ffebee; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.footer {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 16px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 0.75rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #6b8c6b;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #f0f4f0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1">&lt;div class="container" id="app"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;🌱 Farm Traceability&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="badge"&gt;Fresh from Ghana&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="content" id="content"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="loading"&gt;Loading product information...&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="footer"&gt;Scan QR code on package to verify authenticity&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// --- CONFIGURATION: YOU WILL REPLACE THIS URL AFTER STEP 5 ---</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_ID/pub?output=csv';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// -----------------------------------------------------------</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>async function loadData() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const contentDiv = document.getElementById('content');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const batchId = getBatchIdFromURL();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!batchId) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>contentDiv.innerHTML = '&lt;div class="error"&gt;Invalid QR code. Please check the package.&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const response = await fetch(GOOGLE_SHEETS_CSV_URL);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (!response.ok) throw new Error('Network response was not ok');</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const csvText = await response.text();</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const data = parseCSV(csvText);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const product = findProductByBatchId(data, batchId);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (product) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>displayProductInfo(product);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>contentDiv.innerHTML = '&lt;div class="error"&gt;Product not found. Please verify the Batch ID or contact support.&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} catch (error) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>console.error('Error loading data:', error);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>contentDiv.innerHTML = '&lt;div class="error"&gt;Unable to load product information. Please check your internet connection.&lt;/div&gt;';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function getBatchIdFromURL() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const pathParts = window.location.pathname.split('/');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let lastPart = pathParts[pathParts.length - 1];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (lastPart === '' || lastPart === 'farm-trace') {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return null;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (lastPart.endsWith('.html')) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>lastPart = lastPart.replace('.html', '');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return decodeURIComponent(lastPart);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function parseCSV(csvText) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const lines = csvText.trim().split(/\r?\n/);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (lines.length &lt; 2) return [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const headers = lines[0].split(',').map(h =&gt; h.trim().replace(/^"|"$/g, ''));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const data = [];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>for (let i = 1; i &lt; lines.length; i++) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const values = [];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let insideQuotes = false;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>let currentValue = '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const line = lines[i];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>for (let j = 0; j &lt; line.length; j++) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const char = line[j];</p>
-<p class="p1"><span class="Apple-converted-space">                </span>if (char === '"') {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>insideQuotes = !insideQuotes;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else if (char === ',' &amp;&amp; !insideQuotes) {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>values.push(currentValue.trim().replace(/^"|"$/g, ''));</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>currentValue = '';</p>
-<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>currentValue += char;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>values.push(currentValue.trim().replace(/^"|"$/g, ''));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const row = {};</p>
-<p class="p1"><span class="Apple-converted-space">            </span>headers.forEach((header, idx) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>row[header] = values[idx] || '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p1"><span class="Apple-converted-space">            </span>data.push(row);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return data;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function findProductByBatchId(data, batchId) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>return data.find(row =&gt; row.BatchID &amp;&amp; row.BatchID.trim().toUpperCase() === batchId.trim().toUpperCase());</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function formatDate(dateStr) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (!dateStr) return 'Not specified';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const date = new Date(dateStr);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (isNaN(date.getTime())) return dateStr;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return date.toLocaleDateString('en-GB');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} catch(e) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>return dateStr;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function displayProductInfo(product) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const getValue = (key, defaultValue = 'Not specified') =&gt; product[key] &amp;&amp; product[key].trim() ? product[key] : defaultValue;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const productType = getValue('ProductType');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let typeIcon = '🌾';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (productType.toLowerCase().includes('chicken')) typeIcon = '🐔';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else if (productType.toLowerCase().includes('egg')) typeIcon = '🥚';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else if (productType.toLowerCase().includes('pepper')) typeIcon = '🌶️';</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const html = `</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="info-card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;${typeIcon} Batch ID&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;&lt;strong&gt;${getValue('BatchID')}&lt;/strong&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;📦 Product&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;${productType}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;🌱 Planted / Hatched&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;${formatDate(getValue('ProductionDate'))}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;✂️ Harvest / Slaughter&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;${formatDate(getValue('HarvestDate'))}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;🍽️ Feed Used&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;${getValue('FeedUsed')}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="info-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-label"&gt;⏳ Expiry Date&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="info-value"&gt;${formatDate(getValue('ExpiryDate'))}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('content').innerHTML = html;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>loadData();</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+<div class="container" id="app">
+    <div class="header">
+        <h1>🌱 Farm Traceability</h1>
+        <div class="badge">Fresh from Ghana</div>
+    </div>
+    <div class="content" id="content">
+        <div class="loading">Loading product information...</div>
+    </div>
+    <div class="footer">Scan QR code on package to verify authenticity</div>
+</div>
+
+<script>
+    
+    const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT6edexjwhvGTjhyfgZ5RR13-qsWar6JZ0L3_2zf6WmnUnOKWd7BYeFIlVaxI33hcHPDHdQaoU6SPbR/pub?output=csv';
+   
+
+    async function loadData() {
+        const contentDiv = document.getElementById('content');
+        const batchId = getBatchIdFromURL();
+
+        if (!batchId) {
+            contentDiv.innerHTML = '<div class="error">Invalid QR code. Please check the package.</div>';
+            return;
+        }
+
+        try {
+            const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const csvText = await response.text();
+            const data = parseCSV(csvText);
+            const product = findProductByBatchId(data, batchId);
+
+            if (product) {
+                displayProductInfo(product);
+            } else {
+                contentDiv.innerHTML = '<div class="error">Product not found. Please verify the Batch ID or contact support.</div>';
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+            contentDiv.innerHTML = '<div class="error">Unable to load product information. Please check your internet connection.</div>';
+        }
+    }
+
+    function getBatchIdFromURL() {
+        const pathParts = window.location.pathname.split('/');
+        let lastPart = pathParts[pathParts.length - 1];
+        if (lastPart === '' || lastPart === 'farm-trace') {
+            return null;
+        }
+        if (lastPart.endsWith('.html')) {
+            lastPart = lastPart.replace('.html', '');
+        }
+        return decodeURIComponent(lastPart);
+    }
+
+    function parseCSV(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
+
+        const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+        const data = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const values = [];
+            let insideQuotes = false;
+            let currentValue = '';
+            const line = lines[i];
+
+            for (let j = 0; j < line.length; j++) {
+                const char = line[j];
+                if (char === '"') {
+                    insideQuotes = !insideQuotes;
+                } else if (char === ',' && !insideQuotes) {
+                    values.push(currentValue.trim().replace(/^"|"$/g, ''));
+                    currentValue = '';
+                } else {
+                    currentValue += char;
+                }
+            }
+            values.push(currentValue.trim().replace(/^"|"$/g, ''));
+
+            const row = {};
+            headers.forEach((header, idx) => {
+                row[header] = values[idx] || '';
+            });
+            data.push(row);
+        }
+        return data;
+    }
+
+    function findProductByBatchId(data, batchId) {
+        return data.find(row => row.BatchID && row.BatchID.trim().toUpperCase() === batchId.trim().toUpperCase());
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return 'Not specified';
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString('en-GB');
+        } catch(e) {
+            return dateStr;
+        }
+    }
+
+    function displayProductInfo(product) {
+        const getValue = (key, defaultValue = 'Not specified') => product[key] && product[key].trim() ? product[key] : defaultValue;
+
+        const productType = getValue('ProductType');
+        let typeIcon = '🌾';
+        if (productType.toLowerCase().includes('chicken')) typeIcon = '🐔';
+        else if (productType.toLowerCase().includes('egg')) typeIcon = '🥚';
+        else if (productType.toLowerCase().includes('pepper')) typeIcon = '🌶️';
+
+        const html = `
+            <div class="info-card">
+                <div class="info-row">
+                    <div class="info-label">${typeIcon} Batch ID</div>
+                    <div class="info-value"><strong>${getValue('BatchID')}</strong></div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">📦 Product</div>
+                    <div class="info-value">${productType}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">🌱 Planted / Hatched</div>
+                    <div class="info-value">${formatDate(getValue('ProductionDate'))}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">✂️ Harvest / Slaughter</div>
+                    <div class="info-value">${formatDate(getValue('HarvestDate'))}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">🍽️ Feed Used</div>
+                    <div class="info-value">${getValue('FeedUsed')}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">⏳ Expiry Date</div>
+                    <div class="info-value">${formatDate(getValue('ExpiryDate'))}</div>
+                </div>
+            </div>
+        `;
+        document.getElementById('content').innerHTML = html;
+    }
+
+    loadData();
+</script>
 </body>
 </html>
